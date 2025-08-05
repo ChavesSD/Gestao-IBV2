@@ -68,7 +68,7 @@ class AuthSystem {
     async authenticateUser(email, password) {
         try {
             // Integração com Firebase Auth será implementada aqui
-            const response = await fetch('http://localhost:3001/api/auth/login', {
+            const response = await fetch('https://gestao-ibv2-production.up.railway.app/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
