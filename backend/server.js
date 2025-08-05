@@ -56,6 +56,9 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Servir arquivos estáticos
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Servir arquivos do frontend
+app.use(express.static(path.join(__dirname, '..')));
+
 // ========================================
 // HEALTH CHECK
 // ========================================
@@ -89,13 +92,19 @@ app.use('/api/configuracoes', authMiddleware, configuracoesRoutes);
 app.use(errorHandler);
 
 // ========================================
-// ROTA 404
+// SERVIR FRONTEND PARA ROTAS NÃO-API
 // ========================================
-app.use('*', (req, res) => {
-    res.status(404).json({
-        error: 'Rota não encontrada',
-        path: req.originalUrl
-    });
+app.get('*', (req, res) => {
+    // Se for rota da API, retornar 404 JSON
+    if (req.path.startsWith('/api/')) {
+        return res.status(404).json({
+            error: 'Rota da API não encontrada',
+            path: req.originalUrl
+        });
+    }
+    
+    // Para todas as outras rotas, servir o index.html (SPA)
+    res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
 // ========================================
