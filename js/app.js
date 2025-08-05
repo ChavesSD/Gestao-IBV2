@@ -441,7 +441,7 @@ class IBV2App {
                                 <div class="settings-form" id="settings-form">
                                     <div class="form-group">
                                         <label>Nome da Igreja</label>
-                                        <input type="text" id="nome-igreja" placeholder="Nome da igreja" class="form-control" value="Igreja Batista Vida 2">
+                                        <input type="text" id="nome-igreja" placeholder="Nome da igreja" class="form-control" value="IBV2">
                                     </div>
                                     
                                     <div class="form-group">
@@ -671,6 +671,9 @@ class IBV2App {
             case 'dashboard':
                 this.initDashboardScripts();
                 break;
+            case 'configuracoes':
+                this.initConfiguracoesScripts();
+                break;
             // Adicionar outros casos conforme necessário
         }
     }
@@ -678,6 +681,23 @@ class IBV2App {
     initDashboardScripts() {
         // Scripts específicos do dashboard
         console.log('Dashboard carregado');
+    }
+
+    initConfiguracoesScripts() {
+        // Aguardar um pouco para garantir que o DOM foi renderizado
+        setTimeout(() => {
+            if (typeof ConfiguracoesManager !== 'undefined') {
+                // Se já existe uma instância, destruir
+                if (window.configuracoes) {
+                    window.configuracoes = null;
+                }
+                // Criar nova instância
+                window.configuracoes = new ConfiguracoesManager();
+                console.log('Configurações Manager inicializado');
+            } else {
+                console.error('ConfiguracoesManager não encontrado');
+            }
+        }, 100);
     }
 }
 

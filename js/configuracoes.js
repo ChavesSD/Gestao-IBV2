@@ -100,7 +100,7 @@ class ConfiguracoesManager {
             if (response.ok) {
                 const config = await response.json();
                 if (config.data) {
-                    document.getElementById('nome-igreja').value = config.data.nomeIgreja || '';
+                    document.getElementById('nome-igreja').value = config.data.nomeIgreja || 'IBV2';
                     document.getElementById('endereco-igreja').value = config.data.endereco || '';
                     document.getElementById('telefone-igreja').value = config.data.telefone || '';
                     document.getElementById('email-igreja').value = config.data.email || '';
@@ -591,24 +591,5 @@ notificationStyles.textContent = `
 `;
 document.head.appendChild(notificationStyles);
 
-// Instanciar gerenciador quando a página de configurações for carregada
-let configuracoes;
-document.addEventListener('DOMContentLoaded', () => {
-    // Aguardar um pouco para garantir que a página foi carregada
-    setTimeout(() => {
-        if (document.getElementById('gerais-tab')) {
-            configuracoes = new ConfiguracoesManager();
-        }
-    }, 500);
-});
-
-// Também instanciar quando mudar para a página de configurações
-document.addEventListener('click', (e) => {
-    if (e.target.getAttribute('data-page') === 'configuracoes') {
-        setTimeout(() => {
-            if (document.getElementById('gerais-tab') && !configuracoes) {
-                configuracoes = new ConfiguracoesManager();
-            }
-        }, 100);
-    }
-});
+// O ConfiguracoesManager será instanciado pelo app principal
+// quando a página de configurações for carregada
