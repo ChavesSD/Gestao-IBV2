@@ -413,50 +413,253 @@ class IBV2App {
                     <h2>Configurações do Sistema</h2>
                 </div>
                 
-                <div class="settings-sections">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Configurações Gerais</h3>
+                <!-- Navegação das Abas -->
+                <div class="tabs-navigation">
+                    <button class="tab-btn active" data-tab="gerais">
+                        <i class="fas fa-cog"></i>
+                        Configurações Gerais
+                    </button>
+                    <button class="tab-btn" data-tab="usuarios">
+                        <i class="fas fa-users"></i>
+                        Usuários
+                    </button>
+                    <button class="tab-btn" data-tab="logs">
+                        <i class="fas fa-history"></i>
+                        Logs do Sistema
+                    </button>
+                </div>
+
+                <!-- Conteúdo das Abas -->
+                <div class="tab-content">
+                    <!-- Aba Configurações Gerais -->
+                    <div id="gerais-tab" class="tab-panel active">
+                        <div class="settings-sections">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Informações da Igreja</h3>
+                                </div>
+                                <div class="settings-form" id="settings-form">
+                                    <div class="form-group">
+                                        <label>Nome da Igreja</label>
+                                        <input type="text" id="nome-igreja" placeholder="Nome da igreja" class="form-control" value="Igreja Batista Vida 2">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Endereço</label>
+                                        <input type="text" id="endereco-igreja" placeholder="Endereço da igreja" class="form-control">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Telefone</label>
+                                        <input type="text" id="telefone-igreja" placeholder="(11) 99999-9999" class="form-control">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>E-mail</label>
+                                        <input type="email" id="email-igreja" placeholder="contato@igreja.com" class="form-control">
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-primary" id="salvar-config-btn">
+                                    <i class="fas fa-save"></i>
+                                    Salvar Alterações
+                                </button>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Segurança</h3>
+                                </div>
+                                <div class="settings-form">
+                                    <button class="btn btn-secondary" id="alterar-senha-btn">
+                                        <i class="fas fa-key"></i>
+                                        Alterar Minha Senha
+                                    </button>
+                                    
+                                    <button class="btn btn-warning" id="backup-btn">
+                                        <i class="fas fa-download"></i>
+                                        Fazer Backup dos Dados
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="settings-form" id="settings-form">
-                            <div class="form-group">
-                                <label>Nome da Igreja</label>
-                                <input type="text" id="nome-igreja" placeholder="Nome da igreja" class="form-control">
+                    </div>
+
+                    <!-- Aba Usuários -->
+                    <div id="usuarios-tab" class="tab-panel">
+                        <div class="usuarios-section">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Gerenciar Usuários</h3>
+                                    <button class="btn btn-primary" id="novo-usuario-btn">
+                                        <i class="fas fa-plus"></i>
+                                        Novo Usuário
+                                    </button>
+                                </div>
+                                
+                                <div class="usuarios-list" id="usuarios-list">
+                                    <div class="loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        Carregando usuários...
+                                    </div>
+                                </div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label>Endereço</label>
-                                <input type="text" id="endereco-igreja" placeholder="Endereço da igreja" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- Aba Logs -->
+                    <div id="logs-tab" class="tab-panel">
+                        <div class="logs-section">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Logs do Sistema</h3>
+                                    <div class="logs-filters">
+                                        <select id="filtro-tipo" class="form-control">
+                                            <option value="">Todos os tipos</option>
+                                            <option value="login">Login/Logout</option>
+                                            <option value="create">Criação</option>
+                                            <option value="update">Atualização</option>
+                                            <option value="delete">Exclusão</option>
+                                        </select>
+                                        <input type="date" id="filtro-data" class="form-control">
+                                        <button class="btn btn-secondary" id="filtrar-logs-btn">
+                                            <i class="fas fa-filter"></i>
+                                            Filtrar
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="logs-list" id="logs-list">
+                                    <div class="loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        Carregando logs...
+                                    </div>
+                                </div>
                             </div>
-                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Usuário -->
+            <div id="usuario-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="modal-title">Novo Usuário</h3>
+                        <span class="close" id="close-usuario-modal">&times;</span>
+                    </div>
+                    <form id="usuario-form">
+                        <div class="modal-body">
                             <div class="form-group">
-                                <label>Telefone</label>
-                                <input type="text" id="telefone-igreja" placeholder="(11) 99999-9999" class="form-control">
+                                <label>Nome Completo</label>
+                                <input type="text" id="usuario-nome" class="form-control" required>
                             </div>
                             
                             <div class="form-group">
                                 <label>E-mail</label>
-                                <input type="email" id="email-igreja" placeholder="contato@igreja.com" class="form-control">
+                                <input type="email" id="usuario-email" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Senha</label>
+                                <input type="password" id="usuario-senha" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Telefone</label>
+                                <input type="tel" id="usuario-telefone" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Nível de Acesso</label>
+                                <select id="usuario-role" class="form-control" required>
+                                    <option value="">Selecione o nível</option>
+                                    <option value="admin">Administrador (Acesso Total)</option>
+                                    <option value="pastor">Pastor (Acesso de Liderança)</option>
+                                    <option value="lider">Líder (Acesso Limitado)</option>
+                                    <option value="membro">Membro (Apenas Consulta)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Permissões Específicas</label>
+                                <div class="permissions-grid">
+                                    <label class="permission-item">
+                                        <input type="checkbox" name="permissions" value="dashboard">
+                                        <span>Dashboard</span>
+                                    </label>
+                                    <label class="permission-item">
+                                        <input type="checkbox" name="permissions" value="eventos">
+                                        <span>Eventos</span>
+                                    </label>
+                                    <label class="permission-item">
+                                        <input type="checkbox" name="permissions" value="membros">
+                                        <span>Membros</span>
+                                    </label>
+                                    <label class="permission-item">
+                                        <input type="checkbox" name="permissions" value="financeiro">
+                                        <span>Financeiro</span>
+                                    </label>
+                                    <label class="permission-item">
+                                        <input type="checkbox" name="permissions" value="patrimonio">
+                                        <span>Patrimônio</span>
+                                    </label>
+                                    <label class="permission-item">
+                                        <input type="checkbox" name="permissions" value="relatorios">
+                                        <span>Relatórios</span>
+                                    </label>
+                                    <label class="permission-item">
+                                        <input type="checkbox" name="permissions" value="configuracoes">
+                                        <span>Configurações</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         
-                        <button class="btn btn-primary" id="salvar-config-btn">
-                            <i class="fas fa-save"></i>
-                            Salvar Alterações
-                        </button>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Segurança</h3>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="cancelar-usuario">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Salvar
+                            </button>
                         </div>
-                        <div class="settings-form">
-                            <button class="btn btn-secondary" id="alterar-senha-btn">
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal Alterar Senha -->
+            <div id="senha-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Alterar Senha</h3>
+                        <span class="close" id="close-senha-modal">&times;</span>
+                    </div>
+                    <form id="senha-form">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Senha Atual</label>
+                                <input type="password" id="senha-atual" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Nova Senha</label>
+                                <input type="password" id="nova-senha" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Confirmar Nova Senha</label>
+                                <input type="password" id="confirmar-senha" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="cancelar-senha">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-key"></i>
                                 Alterar Senha
                             </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         `;
@@ -703,6 +906,267 @@ pageStyles.textContent = `
         outline: none;
         border-color: var(--primary-color);
         box-shadow: 0 0 0 3px rgba(144, 26, 29, 0.1);
+    }
+
+    /* Estilos das Abas */
+    .tabs-navigation {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 0;
+    }
+
+    .tab-btn {
+        background: none;
+        border: none;
+        padding: 15px 25px;
+        cursor: pointer;
+        border-radius: 10px 10px 0 0;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        color: var(--text-light);
+        border-bottom: 3px solid transparent;
+    }
+
+    .tab-btn:hover {
+        background: var(--background-light);
+        color: var(--text-dark);
+    }
+
+    .tab-btn.active {
+        background: var(--primary-color);
+        color: white;
+        border-bottom-color: var(--accent-color);
+    }
+
+    .tab-panel {
+        display: none;
+    }
+
+    .tab-panel.active {
+        display: block;
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Estilos dos Modais */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-hover);
+        animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--primary-color);
+        color: white;
+        border-radius: 15px 15px 0 0;
+    }
+
+    .modal-header h3 {
+        margin: 0;
+    }
+
+    .close {
+        cursor: pointer;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        transition: var(--transition);
+    }
+
+    .close:hover {
+        opacity: 0.7;
+    }
+
+    .modal-body {
+        padding: 25px;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 20px 25px;
+        border-top: 1px solid var(--border-color);
+        background: var(--background-light);
+        border-radius: 0 0 15px 15px;
+    }
+
+    /* Grid de Permissões */
+    .permissions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .permission-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        transition: var(--transition);
+    }
+
+    .permission-item:hover {
+        background: var(--background-light);
+        border-color: var(--primary-color);
+    }
+
+    .permission-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Filtros de Logs */
+    .logs-filters {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .logs-filters .form-control {
+        width: auto;
+        min-width: 150px;
+    }
+
+    /* Lista de Usuários */
+    .usuarios-list table {
+        margin-top: 20px;
+    }
+
+    .role-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8em;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .role-badge.admin {
+        background: #e74c3c;
+        color: white;
+    }
+
+    .role-badge.pastor {
+        background: #9b59b6;
+        color: white;
+    }
+
+    .role-badge.lider {
+        background: #3498db;
+        color: white;
+    }
+
+    .role-badge.membro {
+        background: #95a5a6;
+        color: white;
+    }
+
+    /* Logs Timeline */
+    .log-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        border-bottom: 1px solid var(--border-color);
+        transition: var(--transition);
+    }
+
+    .log-item:hover {
+        background: var(--background-light);
+    }
+
+    .log-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.1em;
+    }
+
+    .log-icon.login {
+        background: #27ae60;
+    }
+
+    .log-icon.create {
+        background: #3498db;
+    }
+
+    .log-icon.update {
+        background: #f39c12;
+    }
+
+    .log-icon.delete {
+        background: #e74c3c;
+    }
+
+    .log-details {
+        flex: 1;
+    }
+
+    .log-action {
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    .log-description {
+        color: var(--text-light);
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
+
+    .log-time {
+        color: var(--text-light);
+        font-size: 0.8em;
     }
 `;
 document.head.appendChild(pageStyles);

@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
-const { authMiddleware } = require('../middleware/auth');
+const { authMiddleware, adminRequired, leadershipRequired } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -152,6 +152,15 @@ router.post('/login', [
 
         // Reset tentativas de login e atualizar último login
         await user.resetLoginAttempts();
+
+        // Log do login
+        const Log = require('../models/Log');
+        await Log.createLog({
+            type: 'login',
+            action: 'Login realizado',
+            description: `Usuário ${user.name} fez login no sistema`,
+            user: user._id
+        }, req);
 
         // Gerar token
         const token = generateToken(user._id);
@@ -318,6 +327,186 @@ router.post('/verify-token', authMiddleware, (req, res) => {
             role: req.user.role
         }
     });
+});
+
+// @route   GET /api/auth/users
+// @desc    Listar todos os usuários
+// @access  Private (Leadership)
+router.get('/users', [authMiddleware, leadershipRequired], async (req, res) => {
+    try {
+        const users = await User.find()
+            .select('-password')
+            .sort({ name: 1 });
+
+        res.json({
+            success: true,
+            users
+        });
+    } catch (error) {
+        console.error('Erro ao listar usuários:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// @route   PUT /api/auth/users/:id
+// @desc    Atualizar usuário
+// @access  Private (Admin)
+router.put('/users/:id', [authMiddleware, adminRequired], [
+    body('name').optional().trim().isLength({ min: 2, max: 100 }).withMessage('Nome deve ter entre 2 e 100 caracteres'),
+    body('email').optional().isEmail().normalizeEmail().withMessage('E-mail inválido'),
+    body('role').optional().isIn(['admin', 'pastor', 'lider', 'membro']).withMessage('Papel inválido'),
+    body('status').optional().isIn(['ativo', 'inativo', 'suspenso']).withMessage('Status inválido')
+], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                errors: errors.array()
+            });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuário não encontrado'
+            });
+        }
+
+        // Log da ação
+        const Log = require('../models/Log');
+        await Log.createLog({
+            type: 'update',
+            action: 'Usuário atualizado',
+            description: `Usuário ${user.name} foi atualizado`,
+            user: req.user._id,
+            resourceType: 'user',
+            resourceId: user._id
+        }, req);
+
+        res.json({
+            success: true,
+            message: 'Usuário atualizado com sucesso',
+            user
+        });
+    } catch (error) {
+        console.error('Erro ao atualizar usuário:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// @route   DELETE /api/auth/users/:id
+// @desc    Excluir usuário
+// @access  Private (Admin)
+router.delete('/users/:id', [authMiddleware, adminRequired], async (req, res) => {
+    try {
+        // Não permitir exclusão do próprio usuário
+        if (req.params.id === req.user._id.toString()) {
+            return res.status(400).json({
+                success: false,
+                message: 'Você não pode excluir sua própria conta'
+            });
+        }
+
+        const user = await User.findByIdAndDelete(req.params.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuário não encontrado'
+            });
+        }
+
+        // Log da ação
+        const Log = require('../models/Log');
+        await Log.createLog({
+            type: 'delete',
+            action: 'Usuário excluído',
+            description: `Usuário ${user.name} foi excluído do sistema`,
+            user: req.user._id,
+            resourceType: 'user',
+            resourceId: user._id
+        }, req);
+
+        res.json({
+            success: true,
+            message: 'Usuário excluído com sucesso'
+        });
+    } catch (error) {
+        console.error('Erro ao excluir usuário:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// @route   POST /api/auth/change-password
+// @desc    Alterar senha do usuário logado
+// @access  Private
+router.post('/change-password', [authMiddleware], [
+    body('currentPassword').notEmpty().withMessage('Senha atual é obrigatória'),
+    body('newPassword').isLength({ min: 6 }).withMessage('Nova senha deve ter pelo menos 6 caracteres')
+], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                errors: errors.array()
+            });
+        }
+
+        const { currentPassword, newPassword } = req.body;
+        const user = await User.findById(req.user._id);
+
+        // Verificar senha atual
+        const isValidPassword = await user.comparePassword(currentPassword);
+        if (!isValidPassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'Senha atual incorreta'
+            });
+        }
+
+        // Atualizar senha
+        user.password = newPassword;
+        await user.save();
+
+        // Log da ação
+        const Log = require('../models/Log');
+        await Log.createLog({
+            type: 'update',
+            action: 'Senha alterada',
+            description: 'Usuário alterou sua senha',
+            user: req.user._id,
+            resourceType: 'user',
+            resourceId: user._id
+        }, req);
+
+        res.json({
+            success: true,
+            message: 'Senha alterada com sucesso'
+        });
+    } catch (error) {
+        console.error('Erro ao alterar senha:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
 });
 
 module.exports = router;

@@ -14,6 +14,7 @@ const financeiroRoutes = require('./routes/financeiro');
 const patrimonioRoutes = require('./routes/patrimonio');
 const relatoriosRoutes = require('./routes/relatorios');
 const configuracoesRoutes = require('./routes/configuracoes');
+const logsRoutes = require('./routes/logs');
 
 // Importar middlewares
 const errorHandler = require('./middleware/errorHandler');
@@ -85,6 +86,7 @@ app.use('/api/financeiro', authMiddleware, financeiroRoutes);
 app.use('/api/patrimonio', authMiddleware, patrimonioRoutes);
 app.use('/api/relatorios', authMiddleware, relatoriosRoutes);
 app.use('/api/configuracoes', authMiddleware, configuracoesRoutes);
+app.use('/api/logs', authMiddleware, logsRoutes);
 
 // ========================================
 // MIDDLEWARE DE ERRO
