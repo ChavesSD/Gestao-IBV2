@@ -91,9 +91,13 @@ class ConfiguracoesManager {
     async loadInitialData() {
         // Carregar configurações da igreja
         try {
+            const token = localStorage.getItem('token');
+            console.log('Token disponível:', !!token);
+            
             const response = await fetch('https://gestao-ibv2-production.up.railway.app/api/configuracoes', {
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': token ? `Bearer ${token}` : '',
+                    'Content-Type': 'application/json'
                 }
             });
 
@@ -120,11 +124,14 @@ class ConfiguracoesManager {
         };
 
         try {
+            const token = localStorage.getItem('token');
+            console.log('Salvando configurações com token:', !!token);
+            
             const response = await fetch('https://gestao-ibv2-production.up.railway.app/api/configuracoes', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': token ? `Bearer ${token}` : ''
                 },
                 body: JSON.stringify(config)
             });

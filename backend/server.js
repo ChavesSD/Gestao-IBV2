@@ -57,6 +57,11 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Servir arquivos estáticos
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Servir arquivos CSS e JS do frontend
+app.use('/css', express.static(path.join(__dirname, '..', 'css')));
+app.use('/js', express.static(path.join(__dirname, '..', 'js')));
+app.use('/images', express.static(path.join(__dirname, '..', 'images')));
+
 // Servir arquivos do frontend
 app.use(express.static(path.join(__dirname, '..')));
 
@@ -85,7 +90,7 @@ app.use('/api/eventos', authMiddleware, eventosRoutes);
 app.use('/api/financeiro', authMiddleware, financeiroRoutes);
 app.use('/api/patrimonio', authMiddleware, patrimonioRoutes);
 app.use('/api/relatorios', authMiddleware, relatoriosRoutes);
-app.use('/api/configuracoes', authMiddleware, configuracoesRoutes);
+app.use('/api/configuracoes', configuracoesRoutes);
 app.use('/api/logs', authMiddleware, logsRoutes);
 
 // ========================================

@@ -79,6 +79,10 @@ class AuthSystem {
             const result = await response.json();
             
             if (response.ok) {
+                // Salvar o token no localStorage
+                if (result.token) {
+                    localStorage.setItem('token', result.token);
+                }
                 return {
                     success: true,
                     user: result.user
