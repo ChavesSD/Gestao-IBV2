@@ -1,0 +1,537 @@
+/* Reset e Variáveis */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #901A1D; /* Vinho */
+    --secondary-color: #FFFFFF; /* Branco */
+    --accent-color: #A52326;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --background-light: #F8F9FA;
+    --border-color: #E9ECEF;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.15);
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: var(--background-light);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* === TELA DE LOGIN === */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    padding: 20px;
+}
+
+/* Logo flutuante acima da caixa de login */
+.logo-floating {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.logo-main {
+    width: 180px;
+    height: auto;
+    object-fit: contain;
+    box-shadow: 0 8px 30px rgba(144, 26, 29, 0.4);
+}
+
+.login-box {
+    background: var(--secondary-color);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-hover);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+    margin-top: 80px;
+}
+
+.login-header {
+    margin-bottom: 25px;
+    padding-top: 15px;
+}
+
+.login-header p {
+    color: var(--text-light);
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+.login-form {
+    text-align: left;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 16px;
+    transition: var(--transition);
+    background: var(--secondary-color);
+}
+
+.input-group input[type="password"] {
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 5px;
+    transition: var(--transition);
+}
+
+.password-toggle:hover {
+    color: var(--primary-color);
+    background: var(--background-light);
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(144, 26, 29, 0.1);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.login-btn:hover {
+    background: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+
+
+/* Footer da tela de login */
+.login-footer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.login-footer p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* === LAYOUT PRINCIPAL === */
+.main-app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* === SIDEBAR === */
+.sidebar {
+    width: 280px;
+    background: var(--secondary-color);
+    box-shadow: var(--shadow);
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+.sidebar-header {
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.sidebar-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.sidebar-header h2 {
+    font-size: 1.8em;
+    font-weight: 700;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 20px 0;
+}
+
+.menu-item {
+    margin: 5px 20px;
+    border-radius: 10px;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    background: var(--background-light);
+}
+
+.menu-item.active {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.menu-item.active i,
+.menu-item.active span {
+    color: var(--secondary-color);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: var(--text-dark);
+    text-decoration: none;
+    gap: 15px;
+    font-weight: 500;
+}
+
+.menu-item i {
+    font-size: 1.2em;
+    width: 20px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    background: var(--secondary-color);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.user-info i {
+    font-size: 1.5em;
+    color: var(--primary-color);
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.logout-btn:hover {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+/* === CONTEÚDO PRINCIPAL === */
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    transition: var(--transition);
+}
+
+.main-header {
+    background: var(--secondary-color);
+    padding: 20px 30px;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: var(--primary-color);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.sidebar-toggle:hover {
+    background: var(--background-light);
+}
+
+#page-title {
+    color: var(--primary-color);
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.notifications {
+    position: relative;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.notifications:hover {
+    background: var(--background-light);
+}
+
+.notifications i {
+    font-size: 1.3em;
+    color: var(--primary-color);
+}
+
+.notification-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.user-menu {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.user-menu:hover {
+    background: var(--background-light);
+}
+
+.user-menu i {
+    font-size: 1.5em;
+    color: var(--primary-color);
+}
+
+/* === CONTAINER DAS PÁGINAS === */
+.page-container {
+    padding: 30px;
+    min-height: calc(100vh - 80px);
+}
+
+/* === RESPONSIVIDADE === */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .login-box {
+        margin: 20px;
+        padding: 25px 20px;
+        max-width: 300px;
+        margin-top: 60px;
+    }
+    
+    .logo-floating {
+        top: 12%;
+    }
+    
+    .logo-main {
+        width: 150px;
+        height: auto;
+    }
+    
+    .login-footer {
+        bottom: 15px;
+    }
+    
+    .login-footer p {
+        font-size: 12px;
+    }
+    
+    .password-toggle {
+        padding: 6px;
+        right: 20px;
+    }
+    
+    .page-container {
+        padding: 20px;
+    }
+}
+
+/* === ANIMAÇÕES === */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-container > * {
+    animation: fadeIn 0.5s ease;
+}
+
+/* === CARDS GERAIS === */
+.card {
+    background: var(--secondary-color);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    transition: var(--transition);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-title {
+    color: var(--primary-color);
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+/* === BOTÕES === */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.btn-primary:hover {
+    background: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+}
